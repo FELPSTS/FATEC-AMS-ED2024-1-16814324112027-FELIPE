@@ -19,7 +19,7 @@ int main(void) {
 
   calcularDES(&preco, &desconto, &valorfinal);
   
-  printf("preco%d\n deconto aplicado: %d%%\n  e valor final: %.2f", preco,desconto, valorfinal);
+  printf("preco %d\n deconto aplicado: %d%%\n  e valor final: %.2f", preco,desconto, valorfinal);
 
   return 0;
 }
