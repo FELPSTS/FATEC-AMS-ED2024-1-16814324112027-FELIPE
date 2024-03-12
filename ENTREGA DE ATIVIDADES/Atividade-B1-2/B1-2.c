@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+
 void calcularDES(int *preco,int *desconto,float *valorfinal){
   
   *valorfinal = *preco - (*preco * *desconto/100.0);
