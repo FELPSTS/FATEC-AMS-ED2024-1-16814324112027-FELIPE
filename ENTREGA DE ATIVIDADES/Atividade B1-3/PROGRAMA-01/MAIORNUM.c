@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------*/
 /*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
 /*                         Prof Veríssimo                                   */
-/*             Objetivo: Exercícios envolvendo ponteiros e arrays           */
+/*             Objetivo: Exercícios ponteiros e arrays                      */
 /*             Paradigama: Programação Modular                              */
 /*                                                                          */
 /*                                                          Data:18/03/2024 */
