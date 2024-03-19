@@ -8,31 +8,32 @@
 /*--------------------------------------------------------------------------*/
 #include <stdio.h>
 
-int somarArray(int *array, int tamanho) {
-    int soma = 0;
+float somarArray(float *array, int tamanho) {
+    float soma = 0;
     for (int i = 0; i < tamanho; ++i) {
         soma += array[i];
     }
     return soma;
 }
+
 int main() {
     int tamanho = 5;
-    int Notas[tamanho];
+    float notas[tamanho];
 
-    printf("Insira 5 Nota:\n");
+    printf("Insira 5 notas:\n");
 
     for (int i = 0; i < tamanho; ++i) {
         printf("Nota %d: ", i + 1);
-        scanf("%d", &Notas[i]);
+        scanf("%f", &notas[i]);
     }
 
-    printf("\nAs Notas inseridos são: \n");
+    printf("\nAs notas inseridas são: \n");
     for (int i = 0; i < tamanho; ++i) {
-        printf("%d ", Notas[i]);
+        printf("%.2f ", notas[i]);
     }
 
-    printf("\nA soma das notas inseridas é: %d\n",               
-        somarArray(Notas, tamanho));
+    printf("\nA soma das notas inseridas é: %.2f\n",               
+        somarArray(notas, tamanho));
 
     return 0;
 }
