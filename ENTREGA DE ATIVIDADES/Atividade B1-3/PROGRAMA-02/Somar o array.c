@@ -1,3 +1,11 @@
+/*--------------------------------------------------------------------------*/
+/*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
+/*                         Prof Veríssimo                                   */
+/*             Objetivo: Exercícios envolvendo ponteiros e arrays           */
+/*             Paradigama: Programação Modular                              */
+/*                                                                          */
+/*                                                          Data:18/03/2024 */
+/*--------------------------------------------------------------------------*/
 #include <stdio.h>
 
 int somarArray(int *array, int tamanho) {
@@ -9,22 +17,22 @@ int somarArray(int *array, int tamanho) {
 }
 int main() {
     int tamanho = 5;
-    int Numeros[tamanho];
+    int Notas[tamanho];
 
-    printf("Insira 5 números:\n");
+    printf("Insira 5 Nota:\n");
 
     for (int i = 0; i < tamanho; ++i) {
-        printf("Número %d: ", i + 1);
-        scanf("%d", &Numeros[i]);
+        printf("Nota %d: ", i + 1);
+        scanf("%d", &Notas[i]);
     }
 
-    printf("\nOs números inseridos são: \n");
+    printf("\nAs Notas inseridos são: \n");
     for (int i = 0; i < tamanho; ++i) {
-        printf("%d ", Numeros[i]);
+        printf("%d ", Notas[i]);
     }
 
-    printf("\nA soma dos números inseridos é: %d\n",               
-        somarArray(Numeros, tamanho));
+    printf("\nA soma das notas inseridas é: %d\n",               
+        somarArray(Notas, tamanho));
 
     return 0;
 }
