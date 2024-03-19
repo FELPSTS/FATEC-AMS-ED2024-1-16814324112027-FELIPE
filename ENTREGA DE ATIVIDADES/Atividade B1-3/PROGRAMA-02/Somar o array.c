@@ -23,7 +23,8 @@ int main() {
         printf("%d ", Numeros[i]);
     }
 
-    printf("\nA soma dos números inseridos é: %d\n",                 somarArray(Numeros, tamanho));
+    printf("\nA soma dos números inseridos é: %d\n",               
+        somarArray(Numeros, tamanho));
 
     return 0;
 }
