@@ -1,22 +1,30 @@
+/*--------------------------------------------------------------------------*/
+/*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
+/*                         Prof Veríssimo                                   */
+/*             Objetivo: Exercícios envolvendo ponteiros e arrays           */
+/*             Paradigama: Programação Modular                              */
+/*                                                                          */
+/*                                                          Data:18/03/2024 */
+/*--------------------------------------------------------------------------*/
 #include <stdio.h>
 
 int main() {
   int tamanho = 5;
-  int Numeros[tamanho];
-  int *p = Numeros;
+  float Nota[tamanho];
+  float *p = Nota;
 
-  printf("Insira 5 números:\n");
+  printf("Insira 5 Notas:\n");
 
   for (int i = 0; i < tamanho; ++i) {
-    printf("Número %d: ", i + 1);
-    scanf("%d", p); 
+    printf("Nota %d: ", i + 1);
+    scanf("%f", p); 
     p++; 
   }
-  p = Numeros; 
+  p = Nota; 
 
-  printf("\nOs números inseridos são: \n");
+  printf("\nAs Notas inseridas são: \n");
   for (int i = 0; i < tamanho; ++i) {
-    printf("%d ", *p);
+    printf("%f ", *p);
     p++; 
   }
 
