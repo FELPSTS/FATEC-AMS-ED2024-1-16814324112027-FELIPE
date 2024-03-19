@@ -1,36 +1,45 @@
+/*--------------------------------------------------------------------------*/
+/*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
+/*                         Prof Veríssimo                                   */
+/*             Objetivo: Exercícios envolvendo ponteiros e arrays           */
+/*             Paradigama: Programação Modular                              */
+/*                                                                          */
+/*                                                          Data:18/03/2024 */
+/*--------------------------------------------------------------------------*/
 #include <stdio.h>
 
-int multiplicarArray(int *array, int tamanho,int *multiplicador) {
+void multiplicarArray(float *array, int tamanho, int multiplicador) {
     for (int i = 0; i < tamanho; ++i) {
-       array[i] *= *multiplicador;
+        array[i] *= multiplicador;
     }
 }
+
 int main() {
     int tamanho = 5;
-    int Numeros[tamanho];
+    float notas[tamanho];
     int multiplicador;
 
-    printf("Insira 5 números:\n");
+    printf("Insira 5 notas:\n");
 
     for (int i = 0; i < tamanho; ++i) {
-        printf("Número %d: ", i + 1);
-        scanf("%d", &Numeros[i]);
+        printf("Nota %d: ", i + 1);
+        scanf("%f", &notas[i]);
     }
 
-    printf("\nOs números inseridos são: \n");
+    printf("\nAs notas inseridas são: \n");
     for (int i = 0; i < tamanho; ++i) {
-        printf("%d ", Numeros[i]);
+        printf("%.2f ", notas[i]);
     }
 
-    printf("\nInsira um valor para multiplicar-los\n");
+    printf("\nInsira um valor inteiro para multiplicá-las: ");
     scanf("%d", &multiplicador);
 
-   multiplicarArray(Numeros, tamanho, &multiplicador);
-  
-      printf("\nO array após a multiplicação:\n");
-      for (int i = 0; i < tamanho; ++i) {
-          printf("%d ", Numeros[i]);
-      }
-      
+    multiplicarArray(notas, tamanho, multiplicador);
+
+    printf("\nO array após a multiplicação:\n");
+    for (int i = 0; i < tamanho; ++i) {
+        printf("%.2f ", notas[i]);
+    }
+
     return 0;
 }
