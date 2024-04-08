@@ -1,6 +1,3 @@
-
-Claro, vou fornecer exemplos simples de código para cada um dos tópicos mencionados:
-
 Linguagem de programação C:
 
 c
@@ -19,6 +16,8 @@ int main() {
     
     return 0;
 }
+
+
 Abstração de dados:
 
 c
@@ -60,6 +59,8 @@ int main() {
     
     return 0;
 }
+
+
 Ponteiros (Endereçamento da memória):
 
 c
@@ -79,6 +80,8 @@ int main() {
     
     return 0;
 }
+
+
 Listas lineares:
 
 c
@@ -111,6 +114,8 @@ int main() {
     
     return 0;
 }
+
+
 Struct:
 
 c
