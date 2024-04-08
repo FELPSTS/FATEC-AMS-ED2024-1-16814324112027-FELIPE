@@ -1,0 +1,23 @@
+Claro, aqui está um exemplo e um resumo para cada tópico mencionado:
+
+Linguagem de programação C:
+
+Exemplo: Implementação de um programa simples que calcula a média de três números fornecidos pelo usuário.
+Resumo: A linguagem C é uma linguagem de programação de propósito geral, amplamente utilizada em sistemas operacionais, jogos e aplicativos. Ela é conhecida por sua eficiência e proximidade com a máquina, o que a torna adequada para programação de sistemas e aplicações de baixo nível.
+Abstração de dados:
+
+Exemplo: Implementação de uma estrutura de dados abstrata (ADT) para uma fila utilizando um array em C.
+Resumo: Abstração de dados refere-se ao processo de representar os objetos do mundo real em um sistema de computador de forma simplificada e encapsulada. Isso permite manipular os dados sem precisar conhecer os detalhes de sua implementação interna.
+Ponteiros (Endereçamento da memória):
+
+Exemplo: Utilização de ponteiros para manipular dinamicamente a alocação de memória em um programa C.
+Resumo: Ponteiros em C são variáveis que armazenam endereços de memória. Eles permitem manipular diretamente a memória do computador, acessando e modificando dados armazenados em locais específicos da memória.
+Listas lineares:
+
+Exemplo: Implementação de uma lista ligada simples em C para armazenar uma lista de números inteiros.
+Resumo: Uma lista linear é uma estrutura de dados que organiza os elementos de forma linear, onde cada elemento possui um sucessor e, em alguns casos, um predecessor. Existem diferentes tipos de listas lineares, como listas ligadas, listas duplamente ligadas e listas circulares.
+Struct:
+
+Exemplo: Definição de uma struct em C para representar um aluno com campos para nome, matrícula e média.
+Resumo: Struct em C é uma estrutura de dados que permite combinar diferentes tipos de dados em uma única unidade. É útil para representar objetos complexos que contêm múltiplos campos relacionados.
+Esses exemplos e resumos proporcionam uma compreensão básica dos tópicos mencionados na preparação para a avaliação de Estruturas de Dados.
