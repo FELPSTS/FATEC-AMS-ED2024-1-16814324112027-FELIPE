@@ -4,15 +4,14 @@
 
 #define MAX_SIZE 100
 
-/* -------------------------------------------------------*
- * FATEC-São Caetano do Sul Estrutura de Dados     *
- *                                     Atividade B2-1     *
- * Objetivo: simular uma calculadora ph12c utilizando pilas            *
- *                                                                              *
- * Autores:        *
- *                                                   Data:02/04/2024*
- *------------------------------------------------------*
- */
+/*--------------------------------------------------------------------------*/
+/*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
+/*                         Prof Veríssimo                                   */
+/*             Objetivo: Exercícios calculadora ph12c utilizando pila                    */
+/*                       
+/*                                                                          */
+/*                                                          Data:23/04/2024 */
+/*--------------------------------------------------------------------------*/
 
 typedef struct {
     double data[MAX_SIZE];
