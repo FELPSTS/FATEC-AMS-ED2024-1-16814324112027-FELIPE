@@ -6,7 +6,7 @@
 /*--------------------------------------------------------------------------*/
 /*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
 /*                         Prof Veríssimo                                   */
-Atividade N1-2
+*/.            Atividade N1-2     /*
 /*             Objetivo: Rastreio e organização de status de pacotes para entrega          */
 /*                                           */
 /*                                                                          */
