@@ -1,113 +1,112 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
-#define STACK_SIZE 50
+#define MAX_SIZE 100
 
 typedef struct {
-    double data[STACK_SIZE];
+    double data[MAX_SIZE];
     int top;
 } Stack;
 
-void initStack(Stack *stack) {
-    stack->top = -1;
+typedef struct {
+    Stack x_stack;
+    Stack y_stack;
+    Stack z_stack;
+    Stack t_stack;
+} Memory;
+
+void init(Stack *s) {
+    s->top = -1;
 }
 
-int isFull(Stack *stack) {
-    return stack->top == STACK_SIZE - 1;
+int isEmpty(Stack *s) {
+    return (s->top == -1);
 }
 
-int isEmpty(Stack *stack) {
-    return stack->top == -1;
+int isFull(Stack *s) {
+    return (s->top == MAX_SIZE - 1);
 }
 
-void push(Stack *stack, double value) {
-    if (!isFull(stack)) {
-        stack->data[++stack->top] = value;
-    } else {
-        printf("Erro: Pilha cheia.\n");
+void push(Stack *s, double item) {
+    if (isFull(s)) {
+        printf("Stack overflow\n");
         exit(EXIT_FAILURE);
+    }
+    s->data[++s->top] = item;
+}
+
+double pop(Stack *s) {
+    if (isEmpty(s)) {
+        printf("Stack underflow\n");
+        exit(EXIT_FAILURE);
+    }
+    return s->data[s->top--];
+}
+
+void storeMemory(Stack *dest, Stack *source) {
+    while (!isEmpty(source)) {
+        push(dest, pop(source));
     }
 }
 
-double pop(Stack *stack) {
-    if (!isEmpty(stack)) {
-        return stack->data[stack->top--];
-    } else {
-        printf("Erro: Pilha vazia.\n");
-        exit(EXIT_FAILURE);
-    }
+void recallMemory(Stack *source, Stack *dest) {
+    storeMemory(dest, source);
 }
 
-double evaluateRPN(char *expression, Stack *stack) {
-    char *token = strtok(expression, " ");
-
-    while (token != NULL) {
-        if (isdigit(token[0]) || (token[0] == '-' && isdigit(token[1]))) {
-            push(stack, atof(token));
-        } else {
-            double operand2 = pop(stack);
-            double operand1 = pop(stack);
-
-            switch (token[0]) {
-                case '+':
-                    push(stack, operand1 + operand2);
-                    break;
-                case '-':
-                    push(stack, operand1 - operand2);
-                    break;
-                case '*':
-                    push(stack, operand1 * operand2);
-                    break;
-                case '/':
-                    if (operand2 != 0) {
-                        push(stack, operand1 / operand2);
-                    } else {
-                        printf("Erro: Divisão por zero.\n");
-                        exit(EXIT_FAILURE);
-                    }
-                    break;
-                default:
-                    printf("Erro: Operador inválido.\n");
-                    exit(EXIT_FAILURE);
+double calculate(double operand1, double operand2, char operator) {
+    switch (operator) {
+        case '+':
+            return operand1 + operand2;
+        case '-':
+            return operand1 - operand2;
+        case '*':
+            return operand1 * operand2;
+        case '/':
+            if (operand2 == 0) {
+                printf("Error: Division by zero\n");
+                exit(EXIT_FAILURE);
             }
-        }
-        token = strtok(NULL, " ");
+            return operand1 / operand2;
+        default:
+            printf("Invalid operator\n");
+            exit(EXIT_FAILURE);
     }
-
-    return pop(stack);
 }
 
 int main() {
-    char expression[100];
-    printf("Digite a expressão em RPN: ");
-    fgets(expression, sizeof(expression), stdin);
-    expression[strcspn(expression, "\n")] = '\0';
+    Memory memory;
+    init(&memory.x_stack);
+    init(&memory.y_stack);
+    init(&memory.z_stack);
+    init(&memory.t_stack);
 
-    Stack stack;
-    initStack(&stack);
+    char rpn[MAX_SIZE];
+    printf("Enter the RPN expression: ");
+    fgets(rpn, MAX_SIZE, stdin);
 
-    double result = evaluateRPN(expression, &stack);
-    printf("Resultado: %.2lf\n", result);
-    printf("Expressão algébrica equivalente: ");
-
-    char *token = strtok(expression, " ");
-    while (token != NULL) {
-        if (isdigit(token[0]) || (token[0] == '-' && isdigit(token[1]))) {
-            printf("%s ", token);
+    int i = 0;
+    while (rpn[i] != '\0') {
+        if (rpn[i] >= '0' && rpn[i] <= '9') {
+            push(&memory.x_stack, atof(&rpn[i]));
+            while (rpn[i] >= '0' && rpn[i] <= '9')
+                i++;
+        } else if (rpn[i] == '+' || rpn[i] == '-' || rpn[i] == '*' || rpn[i] == '/') {
+            double operand2 = pop(&memory.x_stack);
+            double operand1 = pop(&memory.x_stack);
+            double result = calculate(operand1, operand2, rpn[i]);
+            push(&memory.x_stack, result);
+            i++;
+        } else if (rpn[i] == ' ') {
+            i++;
         } else {
-            printf("(");
-            char operator = token[0];
-            double operand2 = pop(&stack);
-            double operand1 = pop(&stack);
-            printf("%.2lf %c %.2lf) ", operand1, operator, operand2);
-            push(&stack, operand1);
-            push(&stack, operand2);
+            printf("Invalid character in RPN expression\n");
+            exit(EXIT_FAILURE);
         }
-        token = strtok(NULL, " ");
     }
-    printf("\n");
+
+    double final_result = pop(&memory.x_stack);
+    printf("Result: %.2lf\n", final_result);
 
     return 0;
 }
