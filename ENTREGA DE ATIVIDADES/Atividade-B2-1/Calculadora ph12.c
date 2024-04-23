@@ -4,6 +4,16 @@
 
 #define MAX_SIZE 100
 
+/* -------------------------------------------------------*
+ * FATEC-São Caetano do Sul Estrutura de Dados     *
+ *                                     Avaliação N1 - Parte I       *
+ * Objetivo: Controlar Estoque de produtos            *
+ *                                                                              *
+ * Autores: <nomes que compõem a dupla>          *
+ *                                                   Data:02/04/2024*
+ *------------------------------------------------------*
+ */
+
 typedef struct {
     double data[MAX_SIZE];
     int top;
