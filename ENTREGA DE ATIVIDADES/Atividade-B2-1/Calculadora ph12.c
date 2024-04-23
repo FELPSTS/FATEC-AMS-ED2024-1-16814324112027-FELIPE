@@ -6,10 +6,10 @@
 
 /* -------------------------------------------------------*
  * FATEC-São Caetano do Sul Estrutura de Dados     *
- *                                     Avaliação N1 - Parte I       *
- * Objetivo: Controlar Estoque de produtos            *
+ *                                     Atividade B2-1     *
+ * Objetivo: simular uma calculadora ph12c utilizando pilas            *
  *                                                                              *
- * Autores: <nomes que compõem a dupla>          *
+ * Autores:        *
  *                                                   Data:02/04/2024*
  *------------------------------------------------------*
  */
