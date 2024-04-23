@@ -2,6 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+/*--------------------------------------------------------------------------*/
+/*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
+/*                         Prof Veríssimo                                   */
+Atividade N1-2
+/*             Objetivo: Rastreio e organização de status de pacotes para entrega          */
+/*                                           */
+/*                                                                          */
+/*                                                          Data:09/04/2024 */
+/*--------------------------------------------------------------------------*/
 typedef struct Pacote {
     int id;
     char conteudo[100];
