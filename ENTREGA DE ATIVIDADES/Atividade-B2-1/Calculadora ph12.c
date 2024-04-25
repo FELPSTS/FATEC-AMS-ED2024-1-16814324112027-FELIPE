@@ -8,8 +8,7 @@
 /*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
 /*                         Prof Veríssimo                                   */
 /*             Objetivo: Exercícios calculadora ph12c utilizando pila                    */
-/*                       
-/*                                                                          */
+/*                       autor:FELIPE TORQUATO*/
 /*                                                          Data:23/04/2024 */
 /*--------------------------------------------------------------------------*/
 
@@ -106,7 +105,7 @@ int main() {
             double result = calculate(operand1, operand2, rpn[i]);
             push(&memory.x_stack, result);
             i++;
-        } else if (rpn[i] == ' ') {
+        } else if (rpn[i] == ' ' || rpn[i] == '\n' || rpn[i] == '\r') {
             i++;
         } else {
             printf("Invalid character in RPN expression\n");
