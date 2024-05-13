@@ -85,7 +85,6 @@ int main() {
     printf("\nFila Prioritaria:\n");
     displayQueue(&filaPrioritaria);
 
-    // Atender pacientes
     printf("\nPaciente atendido: %s\n", dequeue(&filaNormal).nome);
 
     return 0;
