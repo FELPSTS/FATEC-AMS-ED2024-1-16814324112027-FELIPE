@@ -3,7 +3,14 @@
 #include <string.h>
 
 #define MAX_SIZE 100
-
+/*--------------------------------------------------------------------------*/
+/*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
+/*                         Prof Veríssimo                                   */
+/*             Objetivo: Exercícios fila de HOSPITAL                        */
+/*             dono:Felipe Torquato santos de souza                         */
+/*                                                                          */
+/*                                                          Data:13/03/2024 */
+/*--------------------------------------------------------------------------*/
 typedef struct {
     char nome[50];
     int idade;
