@@ -7,7 +7,7 @@
 /*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
 /*                         Prof Veríssimo                                   */
 /*             Objetivo: Exercícios fila de HOSPITAL                        */
-/*             autor:Felipe Torquato santos de souza                         */
+/*             autor:Felipe Torquato Santos de Souza                         */
 /*                                                                          */
 /*                                                          Data:13/03/2024 */
 /*--------------------------------------------------------------------------*/
