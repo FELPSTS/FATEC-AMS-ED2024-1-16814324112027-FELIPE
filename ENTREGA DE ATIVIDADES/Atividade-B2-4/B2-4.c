@@ -4,12 +4,14 @@
 #include <ctype.h>
 #include <time.h>
 
+#define MAX_CONSULTORIOS 5
+
 /*--------------------------------------------------------------------------*/
 /*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
 /*                         Prof Veríssimo                                   */
 /*             Objetivo: Exercícios fila de HOSPITAL                        */
-/*             autor:Felipe Torquato Santos de Souza                         */
-/*                                                                          */
+/*             autor:Felipe Torquato Santos de Souza                        */
+/*             paradigma da programação:fila                                */
 /*                                                          Data:13/03/2024 */
 /*--------------------------------------------------------------------------*/
 
@@ -30,6 +32,11 @@ typedef struct {
     No* inicio;
     No* fim;
 } Fila;
+
+typedef struct {
+    Paciente atendimentos[MAX_CONSULTORIOS];
+    int consultorioAtual;
+} HistoricoAtendimentos;
 
 void inicializarFila(Fila* fila) {
     fila->inicio = NULL;
@@ -96,29 +103,38 @@ int contemApenasLetras(char* str) {
     return 1;
 }
 
-void atenderPaciente(Fila* filaNormal, Fila* filaPreferencial, Fila* filaUrgente) {
+void atenderPaciente(Fila* filaNormal, Fila* filaPreferencial, Fila* filaUrgente, HistoricoAtendimentos* historico) {
     if (!filaVazia(filaUrgente)) {
-        Paciente pacienteAtendido = removerPaciente(filaUrgente);
-        pacienteAtendido.horaAtendimento = time(NULL);
-        printf("Atendendo paciente urgente: %s\n", pacienteAtendido.nome);
-        printf("Tempo de chegada: %ld, Tempo de atendimento: %ld\n", pacienteAtendido.horaChegada, pacienteAtendido.horaAtendimento);
+        historico->atendimentos[historico->consultorioAtual] = removerPaciente(filaUrgente);
+        historico->atendimentos[historico->consultorioAtual].horaAtendimento = time(NULL);
+        printf("Atendendo paciente urgente: %s no consultório %d\n", historico->atendimentos[historico->consultorioAtual].nome, historico->consultorioAtual + 1);
+        historico->consultorioAtual = (historico->consultorioAtual + 1) % MAX_CONSULTORIOS;
         return;
     }
     if (!filaVazia(filaPreferencial)) {
-        Paciente pacienteAtendido = removerPaciente(filaPreferencial);
-        pacienteAtendido.horaAtendimento = time(NULL);
-        printf("Atendendo paciente preferencial: %s\n", pacienteAtendido.nome);
-        printf("Tempo de chegada: %ld, Tempo de atendimento: %ld\n", pacienteAtendido.horaChegada, pacienteAtendido.horaAtendimento);
+        historico->atendimentos[historico->consultorioAtual] = removerPaciente(filaPreferencial);
+        historico->atendimentos[historico->consultorioAtual].horaAtendimento = time(NULL);
+        printf("Atendendo paciente preferencial: %s no consultório %d\n", historico->atendimentos[historico->consultorioAtual].nome, historico->consultorioAtual + 1);
+        historico->consultorioAtual = (historico->consultorioAtual + 1) % MAX_CONSULTORIOS;
         return;
     }
     if (!filaVazia(filaNormal)) {
-        Paciente pacienteAtendido = removerPaciente(filaNormal);
-        pacienteAtendido.horaAtendimento = time(NULL);
-        printf("Atendendo paciente normal: %s\n", pacienteAtendido.nome);
-        printf("Tempo de chegada: %ld, Tempo de atendimento: %ld\n", pacienteAtendido.horaChegada, pacienteAtendido.horaAtendimento);
+        historico->atendimentos[historico->consultorioAtual] = removerPaciente(filaNormal);
+        historico->atendimentos[historico->consultorioAtual].horaAtendimento = time(NULL);
+        printf("Atendendo paciente normal: %s no consultório %d\n", historico->atendimentos[historico->consultorioAtual].nome, historico->consultorioAtual + 1);
+        historico->consultorioAtual = (historico->consultorioAtual + 1) % MAX_CONSULTORIOS;
         return;
     }
     printf("Não há pacientes para atender.\n");
+}
+
+void mostrarHistoricoAtendimentos(HistoricoAtendimentos* historico) {
+    printf("Histórico de atendimentos:\n");
+    for (int i = 0; i < MAX_CONSULTORIOS; i++) {
+        if (strlen(historico->atendimentos[i].nome) > 0) {
+            printf("Consultório %d: %s, Motivo da consulta: %s\n", i + 1, historico->atendimentos[i].nome, historico->atendimentos[i].motivoConsulta);
+        }
+    }
 }
 
 int main() {
@@ -126,6 +142,9 @@ int main() {
     inicializarFila(&filaNormal);
     inicializarFila(&filaPreferencial);
     inicializarFila(&filaUrgente);
+
+    HistoricoAtendimentos historico;
+    historico.consultorioAtual = 0;
 
     int opcao;
     do {
@@ -135,7 +154,8 @@ int main() {
         printf("3. Adicionar paciente à fila de atendimento urgente\n");
         printf("4. Atender paciente\n");
         printf("5. Visualizar filas\n");
-        printf("6. Sair\n");
+        printf("6. Mostrar histórico de atendimentos\n");
+        printf("7. Sair\n");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -206,7 +226,7 @@ int main() {
                 break;
             }
             case 4: {
-                atenderPaciente(&filaNormal, &filaPreferencial, &filaUrgente);
+                atenderPaciente(&filaNormal, &filaPreferencial, &filaUrgente, &historico);
                 break;
             }
             case 5: {
@@ -215,15 +235,19 @@ int main() {
                 visualizarFila(&filaUrgente, "de atendimento urgente");
                 break;
             }
-            case 6:
+            case 6: {
+                mostrarHistoricoAtendimentos(&historico);
+                break;
+            }
+            case 7:
                 printf("Encerrando o programa.\n");
                 break;
             default:
                 printf("Opção inválida. Por favor, selecione uma opção válida.\n");
-               
+                // Limpar o buffer de entrada
                 while (getchar() != '\n');
         }
-    } while (opcao != 6);
+    } while (opcao != 7);
 
     return 0;
 }
