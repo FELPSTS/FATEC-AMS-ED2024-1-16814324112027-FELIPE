@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <time.h>
 
-#define MAX_SIZE 100
 /*--------------------------------------------------------------------------*/
 /*   FATEC-São Caetano do Sul                 Estrutura de Dados            */
 /*                         Prof Veríssimo                                   */
@@ -11,89 +12,218 @@
 /*                                                                          */
 /*                                                          Data:13/03/2024 */
 /*--------------------------------------------------------------------------*/
+
 typedef struct {
     char nome[50];
     int idade;
     char motivoConsulta[100];
+    time_t horaChegada;
+    time_t horaAtendimento;
 } Paciente;
 
-typedef struct Node {
+typedef struct No {
     Paciente paciente;
-    struct Node* next;
-} Node;
+    struct No* proximo;
+} No;
 
 typedef struct {
-    Node* front;
-    Node* rear;
-    int count;
+    No* inicio;
+    No* fim;
 } Fila;
 
-void initializeQueue(Fila* queue) {
-    queue->front = NULL;
-    queue->rear = NULL;
-    queue->count = 0;
+void inicializarFila(Fila* fila) {
+    fila->inicio = NULL;
+    fila->fim = NULL;
 }
 
-int isEmpty(Fila* queue) {
-    return (queue->count == 0);
+int filaVazia(Fila* fila) {
+    return (fila->inicio == NULL);
 }
 
-void enqueue(Fila* queue, Paciente paciente) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->paciente = paciente;
-    newNode->next = NULL;
-    
-    if (isEmpty(queue)) {
-        queue->front = newNode;
+void adicionarPaciente(Fila* fila, Paciente paciente) {
+    No* novoNo = (No*)malloc(sizeof(No));
+    if (novoNo == NULL) {
+        printf("Erro: falha ao alocar memória para o novo paciente.\n");
+        return;
+    }
+    novoNo->paciente = paciente;
+    novoNo->proximo = NULL;
+
+    if (filaVazia(fila)) {
+        fila->inicio = novoNo;
     } else {
-        queue->rear->next = newNode;
+        fila->fim->proximo = novoNo;
     }
-    queue->rear = newNode;
-    queue->count++;
+    fila->fim = novoNo;
 }
 
-Paciente dequeue(Fila* queue) {
-    if (isEmpty(queue)) {
-        printf("A fila está vazia!\n");
-        exit(EXIT_FAILURE);
+Paciente removerPaciente(Fila* fila) {
+    if (filaVazia(fila)) {
+        printf("Erro: a fila está vazia.\n");
+        Paciente pacienteVazio;
+        strcpy(pacienteVazio.nome, "");
+        pacienteVazio.idade = -1;
+        strcpy(pacienteVazio.motivoConsulta, "");
+        return pacienteVazio;
     }
-
-    Paciente paciente = queue->front->paciente;
-    Node* temp = queue->front;
-    queue->front = queue->front->next;
-    free(temp);
-    queue->count--;
+    No* noRemovido = fila->inicio;
+    Paciente paciente = noRemovido->paciente;
+    fila->inicio = fila->inicio->proximo;
+    if (fila->inicio == NULL) {
+        fila->fim = NULL;
+    }
+    free(noRemovido);
     return paciente;
 }
 
-void displayQueue(Fila* queue) {
-    Node* current = queue->front;
-    while (current != NULL) {
-        printf("Nome: %s, Idade: %d, Motivo da Consulta: %s\n", current->paciente.nome, current->paciente.idade, current->paciente.motivoConsulta);
-        current = current->next;
+void visualizarFila(Fila* fila, const char* tipoFila) {
+    No* atual = fila->inicio;
+    printf("Fila de pacientes %s:\n", tipoFila);
+    while (atual != NULL) {
+        printf("Nome: %s, Idade: %d, Motivo da consulta: %s\n",
+               atual->paciente.nome, atual->paciente.idade, atual->paciente.motivoConsulta);
+        atual = atual->proximo;
     }
 }
 
+int contemApenasLetras(char* str) {
+    int i;
+    for (i = 0; str[i] != '\0'; i++) {
+        if (!isalpha(str[i])) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void atenderPaciente(Fila* filaNormal, Fila* filaPreferencial, Fila* filaUrgente) {
+    if (!filaVazia(filaUrgente)) {
+        Paciente pacienteAtendido = removerPaciente(filaUrgente);
+        pacienteAtendido.horaAtendimento = time(NULL);
+        printf("Atendendo paciente urgente: %s\n", pacienteAtendido.nome);
+        printf("Tempo de chegada: %ld, Tempo de atendimento: %ld\n", pacienteAtendido.horaChegada, pacienteAtendido.horaAtendimento);
+        return;
+    }
+    if (!filaVazia(filaPreferencial)) {
+        Paciente pacienteAtendido = removerPaciente(filaPreferencial);
+        pacienteAtendido.horaAtendimento = time(NULL);
+        printf("Atendendo paciente preferencial: %s\n", pacienteAtendido.nome);
+        printf("Tempo de chegada: %ld, Tempo de atendimento: %ld\n", pacienteAtendido.horaChegada, pacienteAtendido.horaAtendimento);
+        return;
+    }
+    if (!filaVazia(filaNormal)) {
+        Paciente pacienteAtendido = removerPaciente(filaNormal);
+        pacienteAtendido.horaAtendimento = time(NULL);
+        printf("Atendendo paciente normal: %s\n", pacienteAtendido.nome);
+        printf("Tempo de chegada: %ld, Tempo de atendimento: %ld\n", pacienteAtendido.horaChegada, pacienteAtendido.horaAtendimento);
+        return;
+    }
+    printf("Não há pacientes para atender.\n");
+}
+
 int main() {
-    Fila filaNormal, filaPrioritaria, filaUrgente;
-    initializeQueue(&filaNormal);
-    initializeQueue(&filaPrioritaria);
-    initializeQueue(&filaUrgente);
+    Fila filaNormal, filaPreferencial, filaUrgente;
+    inicializarFila(&filaNormal);
+    inicializarFila(&filaPreferencial);
+    inicializarFila(&filaUrgente);
 
-    Paciente p1 = {"Joao", 25, "Dor de cabeça"};
-    Paciente p2 = {"Maria", 35, "Febre"};
-    Paciente p3 = {"Jose", 70, "Pressão alta"};
-    enqueue(&filaNormal, p1);
-    enqueue(&filaNormal, p2);
-    enqueue(&filaPrioritaria, p3);
+    int opcao;
+    do {
+        printf("\nSelecione uma opção:\n");
+        printf("1. Adicionar paciente à fila normal\n");
+        printf("2. Adicionar paciente à fila preferencial\n");
+        printf("3. Adicionar paciente à fila de atendimento urgente\n");
+        printf("4. Atender paciente\n");
+        printf("5. Visualizar filas\n");
+        printf("6. Sair\n");
+        scanf("%d", &opcao);
 
-    printf("Fila Normal:\n");
-    displayQueue(&filaNormal);
-    printf("\nFila Prioritaria:\n");
-    displayQueue(&filaPrioritaria);
-
-    // Atender pacientes
-    printf("\nPaciente atendido: %s\n", dequeue(&filaNormal).nome);
+        switch (opcao) {
+            case 1: {
+                Paciente novoPaciente;
+                printf("Digite o nome do paciente: ");
+                scanf("%s", novoPaciente.nome);
+                if (!contemApenasLetras(novoPaciente.nome)) {
+                    printf("Erro: o nome do paciente não pode conter números.\n");
+                    while (getchar() != '\n');
+                    break;
+                }
+                printf("Digite a idade do paciente: ");
+                if (scanf("%d", &novoPaciente.idade) != 1 || novoPaciente.idade <= 0) {
+                    printf("Erro: idade inválida. Digite um número inteiro maior que zero.\n");
+                    while (getchar() != '\n');
+                    break;
+                }
+                printf("Digite o motivo da consulta: ");
+                scanf("%s", novoPaciente.motivoConsulta);
+                novoPaciente.horaChegada = time(NULL);
+                adicionarPaciente(&filaNormal, novoPaciente);
+                printf("Paciente adicionado com sucesso à fila normal.\n");
+                break;
+            }
+            case 2: {
+                Paciente novoPaciente;
+                printf("Digite o nome do paciente: ");
+                scanf("%s", novoPaciente.nome);
+                if (!contemApenasLetras(novoPaciente.nome)) {
+                    printf("Erro: o nome do paciente não pode conter números.\n");
+                    while (getchar() != '\n');
+                    break;
+                }
+                printf("Digite a idade do paciente: ");
+                if (scanf("%d", &novoPaciente.idade) != 1 || novoPaciente.idade <= 0) {
+                    printf("Erro: idade inválida. Digite um número inteiro maior que zero.\n");
+                    while (getchar() != '\n');
+                    break;
+                }
+                printf("Digite o motivo da consulta: ");
+                scanf("%s", novoPaciente.motivoConsulta);
+                novoPaciente.horaChegada = time(NULL);
+                adicionarPaciente(&filaPreferencial, novoPaciente);
+                printf("Paciente adicionado com sucesso à fila preferencial.\n");
+                break;
+            }
+            case 3: {
+                Paciente novoPaciente;
+                printf("Digite o nome do paciente: ");
+                scanf("%s", novoPaciente.nome);
+                if (!contemApenasLetras(novoPaciente.nome)) {
+                    printf("Erro: o nome do paciente não pode conter números.\n");
+                    while (getchar() != '\n');
+                    break;
+                }
+                printf("Digite a idade do paciente: ");
+                if (scanf("%d", &novoPaciente.idade) != 1 || novoPaciente.idade <= 0) {
+                    printf("Erro: idade inválida. Digite um número inteiro maior que zero.\n");
+                    while (getchar() != '\n');
+                    break;
+                }
+                printf("Digite o motivo da consulta: ");
+                scanf("%s", novoPaciente.motivoConsulta);
+                novoPaciente.horaChegada = time(NULL);
+                adicionarPaciente(&filaUrgente, novoPaciente);
+                printf("Paciente adicionado com sucesso à fila de atendimento urgente.\n");
+                break;
+            }
+            case 4: {
+                atenderPaciente(&filaNormal, &filaPreferencial, &filaUrgente);
+                break;
+            }
+            case 5: {
+                visualizarFila(&filaNormal, "normal");
+                visualizarFila(&filaPreferencial, "preferencial");
+                visualizarFila(&filaUrgente, "de atendimento urgente");
+                break;
+            }
+            case 6:
+                printf("Encerrando o programa.\n");
+                break;
+            default:
+                printf("Opção inválida. Por favor, selecione uma opção válida.\n");
+               
+                while (getchar() != '\n');
+        }
+    } while (opcao != 6);
 
     return 0;
 }
