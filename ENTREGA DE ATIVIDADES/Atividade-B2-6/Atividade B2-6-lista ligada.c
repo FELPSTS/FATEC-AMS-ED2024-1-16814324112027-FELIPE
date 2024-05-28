@@ -65,7 +65,7 @@ int main() {
 
     head->data = 10;
     head->next = second;
-    
+
     second->data = 25;
     second->next = third;
 
@@ -82,9 +82,9 @@ int main() {
     clock_t end_time = clock();
 
     double time_taken = (double)(end_time - start_time) / CLOCKS_PER_SEC;
-    printf("Linked list after insertion: ");
+    printf("resultado da lista: ");
     print_list(head);
-    printf("Time taken for insertion in linked list: %f seconds\n", time_taken);
+    printf("tempo resposta de inserção de lista: %f seconds\n", time_taken);
 
     return 0;
 }
