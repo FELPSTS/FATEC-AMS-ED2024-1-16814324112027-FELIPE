@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
-void insertIntoArray(int arr[], int size, int value, int position) {
-    for (int i = size; i > position; i--) {
-        arr[i] = arr[i - 1];
-    }
-    arr[position] = value;
+void insertInArray(int arr[], int *size, int value, int position) {
+  for (int i = *size; i > position; i--) {
+    arr[i] = arr[i - 1];
+  }
+  arr[position] = value;
+  (*size)++;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -17,39 +19,27 @@ void insertIntoArray(int arr[], int size, int value, int position) {
 /*                                                          Data:13/03/2024   */
 /*----------------------------------------------------------------------------*/
 
-
 int main() {
-    int size;
-    printf("Enter the size of the array: ");
-    scanf("%d", &size);
+  int arr[6] = {10, 25, 40, 80};
+  int size = 4;
+  int valueToInsert = 30;
+  int position = size / 2;
 
-    int array[size + 1];
+  clock_t start, end;
+  double cpu_time_used;
 
-    printf("Enter the elements of the array: ");
-    for (int i = 0; i < size; i++) {
-        scanf("%d", &array[i]);
-    }
+  start = clock();
 
-    int valueToInsert;
-    printf("Enter the value to insert: ");
-    scanf("%d", &valueToInsert);
+  insertInArray(arr, &size, valueToInsert, position);
 
-    int positionToInsert = size / 2;
+  end = clock();
+  cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
 
-    clock_t start, end;
-    double cpu_time_used;
+  printf("Array: ");
+  for (int i = 0; i < size; i++) {
+    printf("%d ", arr[i]);
+  }
+  printf("\nTempo de resposta: %f seconds\n", cpu_time_used);
 
-    start = clock();
-    insertIntoArray(array, size, valueToInsert, positionToInsert);
-    end = clock();
-
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-    printf("Array after insertion: ");
-    for (int i = 0; i < size + 1; i++) {
-        printf("%d ", array[i]);
-    }
-    printf("\nTime taken: %f seconds\n", cpu_time_used);
-
-    return 0;
+  return 0;
 }
