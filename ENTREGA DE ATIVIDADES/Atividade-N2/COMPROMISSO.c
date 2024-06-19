@@ -1,0 +1,503 @@
+/*------------------------------------------------------------------------*/
+/*   FATEC-São Caetano do Sul                 Estrutura de Dados          */
+/*                         FELIPE TORQUATO                                */
+/*            Objetivo: Inserir,Organizar,Consultar e excluir Compromissos*/
+/*             Paradigama: - Programação com Lista Simplesmente Encadeada */
+/*                                                                        */
+/*                                                         Data:17/06/2024*/
+/*------------------------------------------------------------------------*/ 
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Nossa estrutura de Compromissos!
+typedef struct Comp {
+  int id;
+  char nome[50];
+  int hora_inicio;
+  int minuto_inicio;
+
+  int hora_fim;
+  int minuto_fim;
+
+  int dia_inicio;
+  int mes_inicio;
+  int ano_inicio;
+
+  int dia_fim;
+  int mes_fim;
+  int ano_fim;
+
+  char local[50];
+  struct Comp *proximo;
+} Comp;
+int id = 1;
+
+// Iniciando as funções
+Comp *cadastrar(Comp *lista_comp);
+int *tratamento_data_hora(char *temp, int comando);
+Comp *organizar(Comp *lista_comp,Comp *novo_comp);
+void listarCompromissos(Comp *lista_comp);
+bool verificarConflitoHorario(Comp *lista_comp, Comp *novo);
+Comp *excluirCompromisso(Comp *lista_comp, int id);
+
+// Função para editar um compromisso existente
+Comp* editarCompromisso(Comp *lista_comp, int id) {
+
+   Comp *novo = (Comp *)malloc(sizeof(Comp));
+   if (novo == NULL) {
+     printf("Erro de alocação de memória.\n");
+     exit(1);
+   }
+  
+    Comp *atual = lista_comp;
+    // Percorre a lista para encontrar o compromisso com o ID fornecido
+    while (atual != NULL && atual->id != id) {
+        atual = atual->proximo;
+    }
+
+    // Se o compromisso não for encontrado
+    if (atual == NULL) {
+        printf("Nenhum compromisso encontrado com o ID %d.\n", id);
+        return 0;
+    }
+
+  
+  strcpy(novo->nome, atual->nome);
+  strcpy(novo->local, atual->local);
+
+  novo->id = atual->id;
+  
+  novo->hora_inicio = atual->hora_inicio;
+  novo->hora_fim = atual->hora_fim;
+  
+  novo->minuto_inicio = atual->minuto_inicio;
+  novo->hora_inicio = atual->hora_inicio;
+
+  novo->dia_inicio = atual->dia_inicio;
+  novo->dia_fim = atual->dia_fim;
+
+  novo->mes_inicio = atual->mes_inicio;
+  novo->mes_fim = atual->mes_fim;
+
+  novo->ano_inicio = atual->ano_inicio;
+  novo->ano_fim = atual->ano_fim;
+
+  lista_comp = excluirCompromisso(lista_comp, atual->id);
+  
+    int opcao = -1;
+
+    while (opcao != 0) {
+      
+      printf("Nome: %s\n", novo->nome);
+      printf("Local: %s\n", novo->local);
+      printf("Data: %02d/%02d/%d %02:%02\n", novo->dia_inicio, novo->mes_inicio, novo->ano_inicio, novo->hora_inicio, novo->mes_inicio);
+      printf("Data: %02d/%02d/%d %02:%02\n", novo->dia_inicio, novo->mes_inicio, novo->ano_inicio, novo->hora_fim, novo->mes_fim);
+
+        char data_str_inicio[11]; // Ajuste para caber a barra '/' e o terminador nulo
+        char data_str_final[11];
+        char hora_str_inicio[6]; // Ajuste para caber os dois pontos ':' e o terminador nulo
+        char hora_str_final[6];
+
+        printf("\nEscolha uma opção: \n");
+        printf("1. Mudar o Nome do Compromisso\n");
+        printf("2. Mudar as Datas do Compromisso\n");
+        printf("3. Mudar os Horários do Compromisso\n");
+        printf("4. Mudar o Lugar do Compromisso\n");
+        printf("0. Parece Bom!\n");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                printf("\nDigite o Nome do compromisso: ");
+                scanf(" %[^\n]", novo->nome);
+                break;
+
+            case 2:
+                printf("Digite a data do início do compromisso (formato DD/MM/AAAA): ");
+                scanf("%10s", data_str_inicio);
+                int *data_inicio_tratada = tratamento_data_hora(data_str_inicio, 1);
+                  novo->dia_inicio = data_inicio_tratada[0];
+                  novo->mes_inicio = data_inicio_tratada[1];
+                  novo->ano_inicio = data_inicio_tratada[2];
+
+                printf("Digite a data do final do compromisso (formato DD/MM/AAAA): ");
+                scanf("%10s", data_str_final);
+                int *data_final_tratada = tratamento_data_hora(data_str_final, 1);
+                  novo->dia_fim = data_final_tratada[0];
+                  novo->mes_fim = data_final_tratada[1];
+                  novo->ano_fim = data_final_tratada[2];
+                break;
+
+            case 3:
+                printf("Digite a hora do início do compromisso (formato HH:MM): ");
+                scanf("%5s", hora_str_inicio);
+                int *horas_inicio_tratadas = tratamento_data_hora(hora_str_inicio, 0);
+         
+                  novo->hora_inicio = horas_inicio_tratadas[0];
+                  novo->minuto_inicio = horas_inicio_tratadas[1];
+
+                printf("Digite a hora do final do compromisso (formato HH:MM): ");
+                scanf("%5s", hora_str_final);
+                int *horas_final_tratadas = tratamento_data_hora(hora_str_final, 0);
+               
+                  novo->hora_fim = horas_final_tratadas[0];
+                  novo->minuto_fim = horas_final_tratadas[1];
+                break;
+
+            case 4:
+                printf("\nDigite o local do compromisso: ");
+                scanf(" %[^\n]", novo->local);
+                break;
+
+            case 0:
+                printf("Alterações concluídas.\n");
+                break;
+
+            default:
+                printf("Opção inválida.\n");
+                break;
+        }
+    }
+    return organizar(lista_comp, novo);
+}
+
+// Função para excluir compromissos
+Comp *excluirCompromisso(Comp *lista_comp, int id) {
+  Comp *atual = lista_comp;
+  Comp *anterior = NULL;
+
+  // Caso o compromisso a ser excluído seja o primeiro da lista
+  if (atual != NULL && atual->id == id) {
+    lista_comp = atual->proximo;
+    free(atual);
+    return lista_comp;
+  }
+
+  // Percorre a lista para encontrar o compromisso com o ID fornecido
+  while (atual != NULL && atual->id != id) {
+    anterior = atual;
+    atual = atual->proximo;
+  }
+
+  // Se o compromisso não for encontrado
+  if (atual == NULL) {
+    printf("Nenhum compromisso encontrado com o ID %d.\n", id);
+    return lista_comp;
+  }
+
+  // Remove o compromisso da lista e libera a memória
+  anterior->proximo = atual->proximo;
+  free(atual);
+}
+
+// Função para pesquisar compromissos por dia e mês
+void pesquisarCompromissos(Comp *lista_comp,int dia_pesquisa, int mes_pesquisa, int ano_pesquisa) {
+  Comp *atual = lista_comp;
+  int encontrados = 0;
+  char data_str_inicio[11];
+  sprintf(data_str_inicio, "%02d/%02d/%d", dia_pesquisa, mes_pesquisa, ano_pesquisa);
+  int *data_inicio_tratada = tratamento_data_hora(data_str_inicio, 1);
+  int dia_inicio = data_inicio_tratada[0];
+  int mes_inicio = data_inicio_tratada[1];
+  int ano_inicio = data_inicio_tratada[2];
+
+  // Percorre a lista para encontrar compromissos na data fornecida
+  while (atual != NULL) {
+    if (atual->dia_inicio == dia_inicio && atual->mes_inicio == mes_inicio && atual->ano_inicio == ano_inicio) {
+
+      int dia_fim;
+      int mes_fim;
+      int ano_fim;
+      
+      printf("Descrição: %s\n", atual->nome);
+      printf("Inicio: %02d/%02d/%4d %02d:%02d\n", atual->dia_inicio, atual->mes_inicio, atual->ano_inicio,
+             atual->hora_inicio, atual->minuto_inicio);
+      printf("Fim: %02d/%02d/%d %02d:%02d\n", atual->dia_fim, atual->mes_fim, atual->ano_fim ,atual->hora_fim, atual->minuto_fim);
+      printf("Local: %s\n", atual->local);
+      printf("\n");
+      encontrados++;
+    }
+    atual = atual->proximo;
+  }
+
+  if (encontrados == 0) {
+    printf("Nenhum compromisso encontrado para o dia %d/%d/%d.\n", dia_inicio, mes_inicio, ano_inicio);
+  }
+}
+
+int main(void) {
+  
+  Comp *lista_compr = NULL;
+  int opcao, id;
+  Comp *comp;
+
+  // Nosso Menu de opções!
+  while (opcao) {
+    printf("\nEscolha uma opção: \n");
+    printf("\n1. Cadastrar Compromisso\n");
+    printf("\n2. Editar Compromisso\n");
+    printf("\n3. Excluir Compromisso\n");
+    printf("\n4. Pesquisar Compromissos\n");
+    printf("\n5. Listar Compromissos\n");
+    printf("\n0. Sair\n");
+    scanf("%d", &opcao);
+
+    switch (opcao) {
+    case 1:
+      lista_compr = cadastrar(lista_compr);
+      break;
+    case 2:
+      printf("\nDigite o ID do compromisso que deseja editar: ");
+      int id_editar;
+      scanf("%d", &id_editar);
+      lista_compr = editarCompromisso(lista_compr, id_editar);
+      break;
+    case 3:
+      // Chamar função para excluir compromisso
+      printf("\nDigite o ID do compromisso que deseja excluir: ");
+      int id_excluir;
+      scanf("%d", &id_excluir);
+      lista_compr = excluirCompromisso(lista_compr, id_excluir);
+      break;
+    case 4:
+        printf("\nDigite o dia, mês e ano para pesquisar compromissos (formato "
+           "DD/MM/YY): ");
+        int dia_pesquisa, mes_pesquisa, ano_pesquisa;
+        scanf("%d/%d/%d", &dia_pesquisa, &mes_pesquisa, &ano_pesquisa);
+        pesquisarCompromissos(lista_compr, dia_pesquisa, mes_pesquisa, ano_pesquisa);
+        break;
+      break;
+    case 5:
+      listarCompromissos(lista_compr);
+      break;
+    }
+  }
+  printf("\nObrigado por usar o programa :)");
+  return 0;
+}
+
+// Função para cadastrar compromissos
+Comp *cadastrar(Comp *lista_comp) {
+
+  Comp *novo_comp = (Comp *)malloc(sizeof(Comp));
+  if (novo_comp == NULL) {
+    printf("Erro de alocação de memória.\n");
+    exit(1);
+  }
+  printf("\nDigite o Nome do compromisso: ");
+  scanf(" %[^\n]", novo_comp->nome);
+
+  printf("\nDigite o local do compromisso: ");
+  scanf(" %[^\n]", novo_comp->local);
+
+  // Datas e horas do inicio do compromisso
+  char data_str_inicio[10];
+  printf("Digite a data do inicio compromisso (formato DD/MM/AAAA): ");
+  scanf("%10s", data_str_inicio);
+  int *data_inicio_tratada = tratamento_data_hora(data_str_inicio, 1);
+
+  int dia_inicio = data_inicio_tratada[0];
+  int mes_inicio = data_inicio_tratada[1];
+  int ano_inicio = data_inicio_tratada[2];
+
+  char hora_str_inicio[5]; // Formato "HHMM" + '\0'
+  printf("\nDigite a hora do início do compromisso (formato HHMM): ");
+  scanf("%s", &hora_str_inicio);
+  int *horas_inicio_tratadas = tratamento_data_hora(hora_str_inicio, 0);
+  int hora_inicio = horas_inicio_tratadas[0];
+  int minutos_inicio = horas_inicio_tratadas[1];
+
+  // Datas e horas do final do compromisso
+  char data_str_final[10];
+  printf("\nDigite a data do final do compromisso (formato DDMMYYYY): ");
+  scanf("%10s", &data_str_final);
+  int *data_final_tratada = tratamento_data_hora(data_str_final, 1);
+  int dia_final = data_final_tratada[0];
+  int mes_final = data_final_tratada[1];
+  int ano_final = data_final_tratada[2];
+
+  char hora_str_final[5];
+  printf("\nDigite a hora do final do compromisso (formato HHMM): ");
+  scanf("%5s", &hora_str_final);
+  int *horas_final_tratadas = tratamento_data_hora(hora_str_final, 0);
+  int hora_final = horas_final_tratadas[0];
+  int minutos_final = horas_final_tratadas[1];
+
+  // Verificando se o compromisso é válido
+  if (ano_inicio > ano_final ||
+      ano_inicio == ano_final | mes_inicio > mes_final ||
+      mes_inicio == mes_final | dia_inicio > dia_final ||
+      dia_inicio == dia_final | hora_inicio > hora_final ||
+      hora_inicio == hora_final | minutos_inicio > minutos_final) {
+
+    novo_comp->id = id++;
+
+    novo_comp->hora_inicio = hora_inicio;
+    novo_comp->minuto_inicio = minutos_inicio;
+
+    novo_comp->hora_fim = hora_final;
+    novo_comp->minuto_fim = minutos_final;
+
+    novo_comp->dia_inicio = dia_inicio;
+    novo_comp->mes_inicio = mes_inicio;
+    novo_comp->ano_inicio = ano_inicio;
+
+    novo_comp->dia_fim = dia_final;
+    novo_comp->mes_fim = mes_final;
+    novo_comp->ano_fim = ano_final;
+
+    return organizar(lista_comp, novo_comp);
+    
+    printf("\nCompromisso cadastrado com sucesso!\n");
+  } else {
+    printf(
+        "\nO compromisso não é válido verifique todas as datas novamente!\n");
+    Comp *cadastrar(Comp * lista_comp);
+  }
+}
+
+// Função para tratar data e hora e retornar um array
+int *tratamento_data_hora(char *temp, int comando) {
+  static int resultado[3];
+
+  if (comando == 0) { // Tratamento de hora
+    int hora_minuto[2];
+    sscanf(temp, "%2d:%2d", &hora_minuto[0], &hora_minuto[1]);
+    printf("%2d:%2d \n", hora_minuto[0], hora_minuto[1]);
+
+    // Verifica se o horário é válido
+    if (hora_minuto[0] > 23 || hora_minuto[0] < 0 || hora_minuto[1] > 59 ||
+        hora_minuto[1] < 0) {
+      printf("\nPor favor coloque um horário válido (00:00 a 23:59)\n");
+      return NULL;
+    }
+
+    resultado[0] = hora_minuto[0];
+    resultado[1] = hora_minuto[1];
+    return resultado;
+  } else if (comando == 1) { // Tratamento de data
+    int dia_mes_ano[3];
+    sscanf(temp, "%02d/%02d/%d", &dia_mes_ano[0], &dia_mes_ano[1], &dia_mes_ano[2]);
+
+    // Pegando a hora local com o relógio do computador
+    time_t mytime = time(NULL);
+    struct tm tm = *localtime(&mytime);
+
+    
+    
+    // Verifica se a data já passou de acordo com o horário do computador
+    if (dia_mes_ano[2] > 3000 || dia_mes_ano[1] > 12 || dia_mes_ano[0] >31 || dia_mes_ano[2] < tm.tm_year + 1900 ||
+        (dia_mes_ano[2] == tm.tm_year + 1900 &&
+         dia_mes_ano[1] < tm.tm_mon + 1) ||
+        (dia_mes_ano[2] == tm.tm_year + 1900 &&
+         dia_mes_ano[1] == tm.tm_mon + 1 && dia_mes_ano[0] < tm.tm_mday)) {
+      printf("\nA data que você colocou já passou! Ou você colocou uma data "
+             "inválida: (DD/MM/AAAA)\n");
+      printf("\nHoje é: %02d/%02d/%d\n", tm.tm_mday, tm.tm_mon + 1,
+             tm.tm_year + 1900);
+      return NULL;
+    }
+
+    resultado[0] = dia_mes_ano[0];
+    resultado[1] = dia_mes_ano[1];
+    resultado[2] = dia_mes_ano[2];
+    return resultado;
+  }
+
+  return NULL;
+}
+// Ordernar por data
+Comp *organizar(Comp *lista_comp, Comp *novo_comp) {
+  if (lista_comp == NULL) {
+    return novo_comp;
+  }
+  Comp *atual = lista_comp;
+  Comp *anterior = NULL;
+  Comp *inicio = lista_comp;
+  Comp *novo = novo_comp;
+
+  while (atual != NULL) {
+    
+    if (verificarConflitoHorario(lista_comp, novo)) {
+        printf("Erro: Conflito de horário com um compromisso existente.\n");
+        free(novo);
+        return lista_comp;
+    }
+
+    
+    if (atual->ano_inicio > novo->ano_inicio ||
+        (atual->ano_inicio == novo->ano_inicio && atual->mes_inicio > novo->mes_inicio) ||
+        (atual->ano_inicio == novo->ano_inicio && atual->mes_inicio == novo->mes_inicio && atual->dia_inicio > novo->dia_inicio) ||
+        (atual->ano_inicio == novo->ano_inicio && atual->mes_inicio == novo->mes_inicio && atual->dia_inicio == novo->dia_inicio && atual->hora_inicio > novo->hora_inicio) ||
+        (atual->ano_inicio == novo->ano_inicio && atual->mes_inicio == novo->mes_inicio && atual->dia_inicio == novo->dia_inicio && atual->hora_inicio == novo->hora_inicio && 
+        atual->minuto_inicio > novo->minuto_inicio)) {
+      
+      if (anterior == NULL) { // Inserir no início
+        novo->proximo = lista_comp;
+        return novo;
+      } else { // Inserir no meio
+  
+        anterior->proximo = novo;
+        novo->proximo = atual;
+        return inicio;
+      } 
+    } 
+    anterior = atual;
+    atual = atual->proximo;
+  }
+
+  // Inserir no final
+  anterior->proximo = novo;
+  novo->proximo = NULL;
+  return inicio;
+}
+
+
+void listarCompromissos(Comp *lista_comp) {
+  while (lista_comp != NULL) {
+    printf("ID: %d\n", lista_comp->id);
+    printf("Nome: %s\n", lista_comp->nome);
+    printf("Local: %s\n", lista_comp->local);
+    printf("Data: %02d/%02d/%d\n", lista_comp->dia_inicio, lista_comp->mes_inicio,
+           lista_comp->ano_inicio);
+    printf("Data: %02d/%02d/%d\n", lista_comp->dia_fim, lista_comp->mes_fim,
+       lista_comp->ano_fim);
+    lista_comp = lista_comp->proximo;
+  }
+}
+
+// Função para verificar conflitos de horário
+bool verificarConflitoHorario(Comp *lista_comp, Comp *novo) {
+    Comp *atual = lista_comp;
+
+    while (atual != NULL) {
+        // Verificar se as datas são as mesmas
+        if (atual->dia_inicio == novo->dia_inicio && atual->mes_inicio == novo->mes_inicio && atual->ano_inicio == novo->ano_inicio) {
+            // Verificar se os horários se sobrepõem
+            if ((novo->hora_inicio > atual->hora_inicio || (novo->hora_inicio == atual->hora_inicio && novo->minuto_inicio >= atual->minuto_inicio)) &&
+                (novo->hora_inicio < atual->hora_fim || (novo->hora_inicio == atual->hora_fim && novo->minuto_inicio < atual->minuto_fim))) {
+                return true;
+            }
+
+            if ((novo->hora_fim > atual->hora_inicio || (novo->hora_fim == atual->hora_inicio && novo->minuto_fim > atual->minuto_inicio)) &&
+                (novo->hora_fim < atual->hora_fim || (novo->hora_fim == atual->hora_fim && novo->minuto_fim <= atual->minuto_fim))) {
+                return true;
+            }
+        }
+        // Verificar se o novo compromisso engloba o compromisso atual
+        if ((novo->dia_inicio < atual->dia_inicio || (novo->dia_inicio == atual->dia_inicio && novo->mes_inicio < atual->mes_inicio) || 
+             (novo->dia_inicio == atual->dia_inicio && novo->mes_inicio == atual->mes_inicio && novo->ano_inicio < atual->ano_inicio)) &&
+            (novo->dia_fim > atual->dia_fim || (novo->dia_fim == atual->dia_fim && novo->mes_fim > atual->mes_fim) || 
+             (novo->dia_fim == atual->dia_fim && novo->mes_fim == atual->mes_fim && novo->ano_fim > atual->ano_fim))) {
+            return true;
+        }
+
+        atual = atual->proximo;
+    }
+
+    return false;
+}
