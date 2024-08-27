@@ -1,0 +1,1 @@
+"Estes arquivos foram reenviados com o nome da pasta diferente porque quando os fiz, ainda não havia aplicado o padrão de pastas do repositório. No entanto, ainda vou deixar a antiga pasta à disposição no repositório para ver alterações antigas e quando foi enviada a primeira pasta."
