@@ -19,17 +19,3 @@ int busca_binaria(int A[], int n, int x) {
     return -1;
 }
 
-int main() {
-    int A[] = {2, 3, 4, 10, 40};
-    int x = 10;
-    int n = sizeof(A) / sizeof(A[0]);
-
-    int resultado = busca_binaria(A, n, x);
-    if (resultado != -1) {
-        printf("Elemento encontrado no índice %d\n", resultado);
-    } else {
-        printf("Elemento não encontrado\n");
-    }
-
-    return 0;
-}
