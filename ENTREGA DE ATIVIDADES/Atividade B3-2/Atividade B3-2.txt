@@ -1,0 +1,59 @@
+Se x for inexistente em A, acontecera desta forma.
+
+Exemplo:
+Lista A = [1, 3, 5, 7, 9, 11, 13]
+Suponha que x = 14 (por não existir na lista).
+Passos da busca binária:
+Inicialização:
+
+início = 1
+fim = 7 
+Primeira iteração:
+
+meio = (1 + 7) // 2 = 4
+A4 = 7 que é menor que x = 14
+Portanto, início é atualizado para meio + 1 = 5.
+Segunda iteração:
+
+meio = (5 + 7) // 2 = 6
+A6 = 11 que ainda é menor que x = 14
+Portanto, início é atualizado para meio + 1 = 7.
+Terceira iteração:
+
+meio = (7 + 7) // 2 = 7
+A7 = 13, que não é igual a x.
+A função retorna uma mensagem disendo que x não existe na lista.
+Conclusão:
+A busca binária não encontrará x diferente de A.
+
+A busca binária é muito eficiente quando falamos de grandes quantidades de numeros no array pois ele trabalhara de maneira rapida,
+dividindo o array em dois e ficando só com o lado que o numero pode estar assim "criando" um novo array só com metades dos elementos
+repetidas vezes até o numero ser encontrado ou chegar ao fim da lista e dado como inexistente.(para a busca binaria ser valida ela deve estar em ordem)
+
+Contagem de tempo de processos:
+#include <stdio.h>
+
+int busca_binaria(int A[], int n, int x) {
+    int esquerda = 1;    //t
+    int direita = n;    //t
+
+    while (esquerda <= direita) {    //tn
+        int meio = (direita + esquerda) / 2;    //3tn
+
+        if (A[meio] == x) {    //2tn
+            return meio;       //t
+        }
+
+        if (A[meio] < x) {    //2tn
+            esquerda = meio + 1;    //2tn
+        }
+        else {
+            direita = meio - 1;    //2tn
+        }
+    }
+
+    return -1;    //t
+}
+
+t + t + 3tn + 2tn + 2tn + 2tn + t
+3t + 9t log n
