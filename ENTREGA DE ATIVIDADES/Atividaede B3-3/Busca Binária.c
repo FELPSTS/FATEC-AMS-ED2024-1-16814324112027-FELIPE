@@ -1,5 +1,13 @@
 #include <stdio.h>
 
+/*----------------------------------------------------------------------------*/
+/*   FATEC-São Caetano do Sul                 Estrutura de Dados              */
+/*   Prof: Veríssimo                                                          */
+/*   Objetivo: Exercícios analise de desempenho                                */
+/*   autor:Felipe Torquato Santos de Souza                                    */                                        
+/*                                                          Data:10/09/2024   */
+/*----------------------------------------------------------------------------*/
+
 int busca_binaria(int A[], int n, int x) {
     int esq = 0;
     int dir = n - 1;
