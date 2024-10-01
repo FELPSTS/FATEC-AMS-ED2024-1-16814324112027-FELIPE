@@ -26,22 +26,20 @@ class Produto:
     def __repr__(self):
         return f"{self.nome} - R$ {self.preco:.2f} - Validade: {self.data_validade.strftime('%d/%m/%Y')} - Quantidade: {self.quantidade}"
 
-# Função para realizar o Bubble Sort baseado em um atributo específico
 def bubble_sort(produtos, chave):
     n = len(produtos)
     for i in range(n):
-        # Flag para verificar se houve trocas
+
         trocou = False
         for j in range(0, n - i - 1):
             if getattr(produtos[j], chave) > getattr(produtos[j + 1], chave):
-                # Troca os elementos
+
                 produtos[j], produtos[j + 1] = produtos[j + 1], produtos[j]
                 trocou = True
-        # Se não houve troca, a lista já está ordenada
+
         if not trocou:
             break
 
-# Função para inserir produtos manualmente
 def inserir_produtos():
     produtos = []
     num_produtos = int(input("Quantos produtos deseja inserir? "))
@@ -55,10 +53,8 @@ def inserir_produtos():
 
     return produtos
 
-# Exemplo de uso com inserção manual
 produtos = inserir_produtos()
 
-# Escolher o critério de ordenação
 print("\nEscolha o critério de ordenação:")
 print("1. Nome")
 print("2. Preço")
@@ -66,7 +62,6 @@ print("3. Data de Validade")
 print("4. Quantidade")
 criterio = int(input("Digite o número do critério escolhido: "))
 
-# Definir o critério de ordenação
 if criterio == 1:
     chave = 'nome'
 elif criterio == 2:
@@ -79,7 +74,6 @@ else:
     print("Critério inválido. Usando 'nome' como padrão.")
     chave = 'nome'
 
-# Ordenar e exibir os produtos
 bubble_sort(produtos, chave)
 
 print("\nProdutos ordenados:")
