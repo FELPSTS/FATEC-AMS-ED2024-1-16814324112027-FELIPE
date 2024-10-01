@@ -15,7 +15,6 @@ from datetime import datetime
     # Prof Verissímo
     # Paradigma: Iteratividade
 
-# Definição do Produto com nome, preço, data de validade e quantidade
 class Produto:
     def __init__(self, nome, preco, data_validade, quantidade):
         self.nome = nome
