@@ -1,0 +1,1 @@
+Atualmente, o algoritmo Bubble Sort sempre executa todas as iterações, mesmo que o array já esteja ordenado. Isso pode ser otimizado adicionando uma variável de controle que verifica se houve alguma troca durante uma iteração. Se não houve troca, significa que o array já está ordenado e o loop pode ser encerrado antes do final.
