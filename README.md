@@ -1,0 +1,1 @@
+This repository was created to store and organize activities, exercises and academic projects developed throughout the Systems Analysis and Development (ADS) course. It serves as a space to monitor the progress of studies and facilitate access to codes and reports.
